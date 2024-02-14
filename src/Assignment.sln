@@ -2,6 +2,12 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductAPI", "ProductAPI\ProductAPI.csproj", "{6709BC33-A0C8-4DCF-A1C2-AACEB5CA2C1D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{40AA9F3B-D6A9-4989-B073-3F5030132E03}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{91C7292D-1D9D-4E1C-BA68-B076FEDA5AFD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway", "Gateway\Gateway.csproj", "{427B9ADF-64EB-475F-A996-98C52A0FFEB3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +18,17 @@ Global
 		{6709BC33-A0C8-4DCF-A1C2-AACEB5CA2C1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6709BC33-A0C8-4DCF-A1C2-AACEB5CA2C1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6709BC33-A0C8-4DCF-A1C2-AACEB5CA2C1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40AA9F3B-D6A9-4989-B073-3F5030132E03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40AA9F3B-D6A9-4989-B073-3F5030132E03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40AA9F3B-D6A9-4989-B073-3F5030132E03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40AA9F3B-D6A9-4989-B073-3F5030132E03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91C7292D-1D9D-4E1C-BA68-B076FEDA5AFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91C7292D-1D9D-4E1C-BA68-B076FEDA5AFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91C7292D-1D9D-4E1C-BA68-B076FEDA5AFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91C7292D-1D9D-4E1C-BA68-B076FEDA5AFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{427B9ADF-64EB-475F-A996-98C52A0FFEB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{427B9ADF-64EB-475F-A996-98C52A0FFEB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{427B9ADF-64EB-475F-A996-98C52A0FFEB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{427B9ADF-64EB-475F-A996-98C52A0FFEB3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

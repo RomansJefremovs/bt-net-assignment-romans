@@ -52,8 +52,7 @@ namespace ProductAPI
         /// </param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
+            if (env.IsDevelopment() || env.IsEnvironment("Testing")){
                 app.UseDeveloperExceptionPage();
             }
             else
