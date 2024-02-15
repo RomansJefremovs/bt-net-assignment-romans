@@ -50,7 +50,7 @@ namespace ProductAPI
         /// <param name="env">
         /// Represents a class that provides information about the web hosting environment an application is running in.
         /// </param>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,ApplicationDbContext dbContext)
         {
             if (env.IsDevelopment() || env.IsEnvironment("Testing")){
                 app.UseDeveloperExceptionPage();
@@ -59,7 +59,7 @@ namespace ProductAPI
             {
                 app.UseHsts();
             }
-
+            dbContext.Database.EnsureCreated();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
