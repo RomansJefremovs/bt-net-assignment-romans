@@ -5,7 +5,7 @@ on:
     branches:
       - master  # Adjust if your default branch is different
     paths:
-      - 'src/Gateway/**'  # Ensure this matches the path to your Gateway project
+      - 'Gateway/**'  # Ensure this matches the path to your Gateway project
 
 jobs:
   build-and-deploy:
@@ -17,7 +17,7 @@ jobs:
       # Debugging step: List contents of the Gateway directory
       - name: List contents of the Gateway project directory
         run: dir
-        working-directory: Gateway  # Adjust if your Gateway project is in a different directory
+        working-directory: bt-net-assignment-romans/src/Gateway  # Adjust if your Gateway project is in a different directory
 
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
@@ -26,11 +26,11 @@ jobs:
 
       # Use full path in the dotnet build command
       - name: Build with dotnet
-        run: dotnet build Gateway/Gateway.csproj --configuration Release  # Adjust the path if necessary
+        run: dotnet build bt-net-assignment-romans/src/Gateway/Gateway.csproj --configuration Release  # Adjust the path if necessary
 
       # Use full path in the dotnet publish command
       - name: Dotnet publish
-        run: dotnet publish Gateway/Gateway.csproj -c Release -o ./publish  # Adjust the path if necessary
+        run: dotnet publish bt-net-assignment-romans/src/Gateway/Gateway.csproj -c Release -o ./publish  # Adjust the path if necessary
 
       - name: Deploy to Azure App Service
         uses: azure/webapps-deploy@v2
