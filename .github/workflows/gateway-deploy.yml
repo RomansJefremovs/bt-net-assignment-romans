@@ -1,51 +1,31 @@
-name: Build and Deploy to Azure Web App
+name: Deploy Gateway to Azure Web App
 
 on:
   push:
     branches:
-      - master
+      - master  # Or your default branch
     paths:
       - 'src/Gateway/**'
 
 jobs:
-  build:
-    runs-on: windows-latest
+  build-and-deploy:
+    runs-on: windows-latest  # Or 'ubuntu-latest' if your Azure Web App runs on Linux
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+    - uses: actions/checkout@v2
 
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '8.x'
+    - name: Set up .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '8.x'  # Ensure this matches your project's target .NET version
 
-      - name: Build Project
-        run: dotnet build src/Gateway/Gateway.csproj --configuration Release
+    - name: Build and Publish .NET Core project
+      run: |
+        dotnet publish src/Gateway/Gateway.csproj -c Release -o ./publish
 
-      - name: Publish Project
-        run: dotnet publish src/Gateway/Gateway.csproj -c Release -o ./publish
-
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: published-app
-          path: ./publish
-
-  deploy:
-    runs-on: windows-latest
-    needs: build
-
-    steps:
-      - name: Download Artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: published-app
-          path: ./publish
-
-      - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: your-azure-webapp-name
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ./publish
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: BrandTechGatewayAPI  # Replace with your Azure Web App name for the Gateway
+        publish-profile: ${{ secrets.AZURE_GATEWAY_PUBLISH_PROFILE }}  # Use a separate secret for the Gateway if needed
+        package: ./publish
