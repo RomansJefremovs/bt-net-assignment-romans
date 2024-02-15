@@ -14,15 +14,23 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      # Debugging step: List contents of the Gateway directory
-      - name: List contents of the Gateway project directory
+      # List the contents of the repository root
+      - name: List contents of the repository root
         run: dir
-        working-directory: bt-net-assignment-romans/src/Gateway  # Adjust if your Gateway project is in a different directory
 
-      
-      - name: Deploy to Azure App Service
-        uses: azure/webapps-deploy@v2
+      # List the contents of the Gateway directory
+      - name: List contents of the Gateway directory
+        run: dir Gateway
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v1
         with:
-          app-name: ${{ secrets.AZURE_APP_NAME_GATEWAY }}
-          publish-profile: ${{ secrets.AZURE_CREDENTIALS_GATEWAY }}
-          package: ./publish
+          dotnet-version: '8.0'
+
+      - name: Build with dotnet
+        run: dotnet build Gateway/Gateway.csproj --configuration Release
+
+      - name: Dotnet publish
+        run: dotnet publish Gateway/Gateway.csproj -c Release -o ./publish
+
+      # Continue with the rest of your steps...
