@@ -20,10 +20,10 @@ jobs:
           dotnet-version: '8.0.x'  # Specify your .NET version
 
       - name: Build with dotnet
-        run: dotnet build ./ProductAPI --configuration Release  # Adjust the path to your ProductAPI project
+        run: dotnet build ./src/ProductAPI/ProductAPI.csproj --configuration Release  # Adjust the path to your ProductAPI project
 
       - name: Dotnet publish
-        run: dotnet publish ./ProductAPI -c Release -o ./publish  # Adjust the path and ensure the output directory is correct
+        run: dotnet publish ./src/ProductAPI/ProductAPI.csproj -c Release -o ./publish  # Adjust the path and ensure the output directory is correct
 
       - name: Deploy to Azure App Service
         uses: azure/webapps-deploy@v2
