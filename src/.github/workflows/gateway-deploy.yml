@@ -20,16 +20,14 @@ jobs:
           dotnet-version: '8.0'  # Ensure this matches your project's target .NET version
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
-        working-directory: Gateway  # Set the working directory to the Gateway project directory
+        run: dotnet build src/Gateway/Gateway.csproj --configuration Release  # Specify the path to the Gateway project's .csproj file
 
       - name: Dotnet publish
-        run: dotnet publish -c Release -o ./publish
-        working-directory: Gateway  # Ensure dotnet publish runs in the Gateway project directory
+        run: dotnet publish src/Gateway/Gateway.csproj -c Release -o ./publish  # Publish the Gateway project
 
       - name: Deploy to Azure App Service
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ secrets.AZURE_APP_NAME_GATEWAY }}  # Use the Azure App Service name for your Gateway app
           publish-profile: ${{ secrets.AZURE_CREDENTIALS_GATEWAY }}  # Use the publish profile or service principal for Azure deployment
-          package: ./Gateway/publish  # Adjust the package path according to the working directory
+          package: ./publish
