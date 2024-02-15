@@ -31,3 +31,4 @@ jobs:
           app-name: ${{ secrets.AZURE_APP_NAME_PRODUCTAPI }}
           publish-profile: ${{ secrets.AZURE_CREDENTIALS_PRODUCTAPI }}  # Ensure this secret is set in your repository
           package: ./publish
+
