@@ -19,6 +19,7 @@ jobs:
         with:
           dotnet-version: '8.0.x'  # Specify your .NET version
 
+
       - name: Build with dotnet
         run: dotnet build ProductAPI\ProductAPI.csproj --configuration Release  # Adjust the path to your ProductAPI project
 
