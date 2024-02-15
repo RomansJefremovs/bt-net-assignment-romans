@@ -51,7 +51,7 @@ public class ProductsController(ApplicationDbContext context) : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "An error occurred while retrieving products.");
-            return StatusCode(500, "Internal server error, please try again later.");
+            return StatusCode(500, "Internal server error, please try again later."+ex.Message);
         }
     }
 
