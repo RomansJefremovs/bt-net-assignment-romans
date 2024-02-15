@@ -1,35 +1,32 @@
-name: Deploy ProductAPI to Azure App Service
+name: Deploy ProductAPI to Azure Web App
 
 on:
   push:
     branches:
-      - master  # Trigger on push to main branch; adjust if necessary
+      - master  # Or your default branch
     paths:
-      - 'ProductAPI/**'  # Adjust this path to match your ProductAPI project directory
+      - 'src/ProductAPI/**'
 
 jobs:
   build-and-deploy:
-    runs-on: windows-latest
+    runs-on: windows-latest  # Choose 'ubuntu-latest' if your Azure Web App runs on Linux
 
     steps:
-      - uses: actions/checkout@v2  # Checks out your repository under $GITHUB_WORKSPACE
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Set up .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '8.0.x'  # Specify your .NET version
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '8.x'  # Ensure this matches the version you use
 
+    - name: Build and Publish .NET Core project
+      run: |
+        dotnet publish src/ProductAPI/ProductAPI.csproj -c Release -o ./publish
 
-      - name: Build with dotnet
-        run: dotnet build ProductAPI\ProductAPI.csproj --configuration Release  # Adjust the path to your ProductAPI project
-
-      - name: Dotnet publish
-        run: dotnet publish ProductAPI\ProductAPI.csproj -c Release -o ./publish  # Adjust the path and ensure the output directory is correct
-
-      - name: Deploy to Azure App Service
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: ${{ secrets.AZURE_APP_NAME_PRODUCTAPI }}
-          publish-profile: ${{ secrets.AZURE_CREDENTIALS_PRODUCTAPI }}  # Ensure this secret is set in your repository
-          package: ./publish
-
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: BrandTechProductAPI  # Replace with your Azure Web App name
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}  # Ensure you have this secret in your GitHub repo
+        package: ./publish
