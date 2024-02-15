@@ -5,6 +5,7 @@ using ProductAPI.DTO;
 using ProductAPI.Entities;
 
 namespace ProductAPI.Controllers;
+
 /// <summary>
 /// A class that represents the controller for the products, used to handle the requests and responses for the products.
 /// </summary>
@@ -24,17 +25,36 @@ public class ProductsController(ApplicationDbContext context) : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ProductDTO>>> GetProducts()
     {
-        return await context.Products
-            .Select(p => new ProductDTO
+        var _logger = LoggerFactory
+            .Create(builder => builder.AddConsole())
+            .CreateLogger<ProductsController>();
+        try
+        {
+            var products = await context
+                .Products.Select(p => new ProductDTO
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Price = p.Price,
+                    CategoryId = p.CategoryId
+                })
+                .ToListAsync();
+
+            if (!products.Any())
             {
-                Id = p.Id,
-                Name = p.Name,
-                Price = p.Price,
-                CategoryId = p.CategoryId
-            })
-            .ToListAsync();
+                _logger.LogInformation("No products found in the database.");
+                return NotFound("No products found.");
+            }
+
+            return products;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while retrieving products.");
+            return StatusCode(500, "Internal server error, please try again later.");
+        }
     }
-    
+
     /// <summary>
     ///  A method that returns a product with a specific identifier.
     /// </summary>
@@ -47,8 +67,8 @@ public class ProductsController(ApplicationDbContext context) : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<ProductDTO>> GetProduct(int id)
     {
-        var product = await context.Products
-            .Select(p => new ProductDTO
+        var product = await context
+            .Products.Select(p => new ProductDTO
             {
                 Id = p.Id,
                 Name = p.Name,
@@ -64,7 +84,7 @@ public class ProductsController(ApplicationDbContext context) : ControllerBase
 
         return product;
     }
-    
+
     /// <summary>
     /// A method that creates a new product in the database.
     /// </summary>
@@ -89,6 +109,7 @@ public class ProductsController(ApplicationDbContext context) : ControllerBase
 
         return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, productDto);
     }
+
     /// <summary>
     /// A method that deletes a product with a specific identifier from the database.
     /// </summary>
