@@ -14,7 +14,7 @@ namespace ProductAPI.Controllers;
 /// </param>
 [Route("/[controller]")]
 [ApiController]
-public class CategoriesController(ApplicationDbContext context): ControllerBase
+public class CategoriesController(ApplicationDbContext context) : ControllerBase
 {
     /// <summary>
     /// A method that returns all the categories in the database.
@@ -25,8 +25,8 @@ public class CategoriesController(ApplicationDbContext context): ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<CategoryDTO>>> GetProducts()
     {
-        return await context.Categories
-            .Select(c => new CategoryDTO
+        return await context
+            .Categories.Select(c => new CategoryDTO
             {
                 Id = c.Id,
                 Name = c.Name,
@@ -34,7 +34,7 @@ public class CategoriesController(ApplicationDbContext context): ControllerBase
             })
             .ToListAsync();
     }
-    
+
     /// <summary>
     /// A method that returns a category with a specific identifier or a not found response.
     /// </summary>
@@ -47,8 +47,8 @@ public class CategoriesController(ApplicationDbContext context): ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<CategoryDTO>> GetProduct(int id)
     {
-        var product = await context.Categories
-            .Select(p => new CategoryDTO
+        var product = await context
+            .Categories.Select(p => new CategoryDTO
             {
                 Id = p.Id,
                 Name = p.Name,
@@ -63,7 +63,7 @@ public class CategoriesController(ApplicationDbContext context): ControllerBase
 
         return product;
     }
-    
+
     /// <summary>
     /// A method that updates a category with a specific identifier or a not found response.
     /// </summary>
@@ -76,18 +76,14 @@ public class CategoriesController(ApplicationDbContext context): ControllerBase
     [HttpPost]
     public async Task<ActionResult<CategoryDTO>> PostProduct(CategoryDTO categoryDto)
     {
-        var product = new Category
-        {
-            Name = categoryDto.Name,
-            ParentId = categoryDto.ParentId
-        };
+        var product = new Category { Name = categoryDto.Name, ParentId = categoryDto.ParentId };
 
         context.Categories.Add(product);
         await context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, categoryDto);
     }
-    
+
     /// <summary>
     /// A method that deletes a category with a specific identifier or a not found response.
     /// </summary>
