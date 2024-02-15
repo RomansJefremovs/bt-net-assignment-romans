@@ -3,9 +3,9 @@ name: Deploy Gateway to Azure App Service
 on:
   push:
     branches:
-      - master  # Adjust if your default branch is different
+      - origin/master  # Adjust if your default branch is different
     paths:
-      - 'src/**'  # Ensure this matches the path to your Gateway project
+      - 'src/Gateway/**'  # Ensure this matches the path to your Gateway project
 
 jobs:
   build-and-deploy:
