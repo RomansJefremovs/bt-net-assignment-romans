@@ -17,7 +17,8 @@ public class Startup
         services.AddHttpClient(
             "ProductsAPI",
             client =>
-            {
+            { 
+                //Mikkel and Mark please change url to http://localhost:5095/ for local testing
                 client.BaseAddress = new Uri("https://brandtechproductapi.azurewebsites.net/");
             }
         );
