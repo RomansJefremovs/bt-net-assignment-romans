@@ -1,0 +1,33 @@
+name: Deploy Gateway to Azure App Service
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'Gateway/**'
+
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '8.0'  # Specify your .NET version
+
+      - name: Build with dotnet
+        run: dotnet build ./Gateway --configuration Release
+
+      - name: Dotnet publish
+        run: dotnet publish ./Gateway -c Release -o ./publish
+
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ secrets.AZURE_APP_NAME_GATEWAY }}
+          publish-profile: ${{ secrets.AZURE_CREDENTIALS_GATEWAY }}
+          package: ./publish
