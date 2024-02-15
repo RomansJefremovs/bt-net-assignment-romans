@@ -20,10 +20,10 @@ jobs:
           dotnet-version: '8.0'  # Specify your .NET version
 
       - name: Build with dotnet
-        run: dotnet build  ./src/Gateway/Gateway.csproj --configuration Release
+        run: dotnet build  Gateway/Gateway.csproj--configuration Release
 
       - name: Dotnet publish
-        run: dotnet publish ./src/Gateway/Gateway.csproj -c Release -o ./publish
+        run: dotnet publish Gateway/Gateway.csproj-c Release -o ./publish
 
       - name: Deploy to Azure App Service
         uses: azure/webapps-deploy@v2
