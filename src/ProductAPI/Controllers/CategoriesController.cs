@@ -25,14 +25,21 @@ public class CategoriesController(ApplicationDbContext context) : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<CategoryDTO>>> GetProducts()
     {
-        return await context
-            .Categories.Select(c => new CategoryDTO
-            {
-                Id = c.Id,
-                Name = c.Name,
-                ParentId = c.ParentId
-            })
-            .ToListAsync();
+        try
+        {
+            return await context
+                .Categories.Select(c => new CategoryDTO
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    ParentId = c.ParentId
+                })
+                .ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "Internal server error, please try again later." + ex.Message);
+        }
     }
 
     /// <summary>
@@ -47,21 +54,28 @@ public class CategoriesController(ApplicationDbContext context) : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<CategoryDTO>> GetProduct(int id)
     {
-        var product = await context
-            .Categories.Select(p => new CategoryDTO
-            {
-                Id = p.Id,
-                Name = p.Name,
-                ParentId = p.ParentId
-            })
-            .FirstOrDefaultAsync(p => p.Id == id);
-
-        if (product == null)
+        try
         {
-            return NotFound();
-        }
+            var product = await context
+                .Categories.Select(p => new CategoryDTO
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    ParentId = p.ParentId
+                })
+                .FirstOrDefaultAsync(p => p.Id == id);
 
-        return product;
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return product;
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "Internal server error, please try again later." + ex.Message);
+        }
     }
 
     /// <summary>
@@ -76,12 +90,19 @@ public class CategoriesController(ApplicationDbContext context) : ControllerBase
     [HttpPost]
     public async Task<ActionResult<CategoryDTO>> PostProduct(CategoryDTO categoryDto)
     {
-        var product = new Category { Name = categoryDto.Name, ParentId = categoryDto.ParentId };
+        try
+        {
+            var product = new Category { Name = categoryDto.Name, ParentId = categoryDto.ParentId };
 
-        context.Categories.Add(product);
-        await context.SaveChangesAsync();
+            context.Categories.Add(product);
+            await context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, categoryDto);
+            return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, categoryDto);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "Internal server error, please try again later." + ex.Message);
+        }
     }
 
     /// <summary>
@@ -96,15 +117,22 @@ public class CategoriesController(ApplicationDbContext context) : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteProduct(int id)
     {
-        var product = await context.Categories.FindAsync(id);
-        if (product == null)
+        try
         {
-            return NotFound();
+            var product = await context.Categories.FindAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            context.Categories.Remove(product);
+            await context.SaveChangesAsync();
+
+            return NoContent();
         }
-
-        context.Categories.Remove(product);
-        await context.SaveChangesAsync();
-
-        return NoContent();
+        catch (Exception ex)
+        {
+            return StatusCode(500, "Internal server error, please try again later." + ex.Message);
+        }
     }
 }

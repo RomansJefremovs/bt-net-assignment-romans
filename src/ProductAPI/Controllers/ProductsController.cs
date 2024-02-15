@@ -51,7 +51,7 @@ public class ProductsController(ApplicationDbContext context) : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "An error occurred while retrieving products.");
-            return StatusCode(500, "Internal server error, please try again later."+ex.Message);
+            return StatusCode(500, "Internal server error, please try again later." + ex.Message);
         }
     }
 
@@ -67,22 +67,29 @@ public class ProductsController(ApplicationDbContext context) : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<ProductDTO>> GetProduct(int id)
     {
-        var product = await context
-            .Products.Select(p => new ProductDTO
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Price = p.Price,
-                CategoryId = p.CategoryId
-            })
-            .FirstOrDefaultAsync(p => p.Id == id);
-
-        if (product == null)
+        try
         {
-            return NotFound();
-        }
+            var product = await context
+                .Products.Select(p => new ProductDTO
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Price = p.Price,
+                    CategoryId = p.CategoryId
+                })
+                .FirstOrDefaultAsync(p => p.Id == id);
 
-        return product;
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return product;
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "Internal server error, please try again later." + ex.Message);
+        }
     }
 
     /// <summary>
@@ -97,17 +104,24 @@ public class ProductsController(ApplicationDbContext context) : ControllerBase
     [HttpPost]
     public async Task<ActionResult<ProductDTO>> PostProduct(ProductDTO productDto)
     {
-        var product = new Product
+        try
         {
-            Name = productDto.Name,
-            Price = productDto.Price,
-            CategoryId = productDto.CategoryId
-        };
+            var product = new Product
+            {
+                Name = productDto.Name,
+                Price = productDto.Price,
+                CategoryId = productDto.CategoryId
+            };
 
-        context.Products.Add(product);
-        await context.SaveChangesAsync();
+            context.Products.Add(product);
+            await context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, productDto);
+            return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, productDto);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "Internal server error, please try again later." + ex.Message);
+        }
     }
 
     /// <summary>
@@ -122,15 +136,22 @@ public class ProductsController(ApplicationDbContext context) : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteProduct(int id)
     {
-        var product = await context.Products.FindAsync(id);
-        if (product == null)
+        try
         {
-            return NotFound();
+            var product = await context.Products.FindAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            context.Products.Remove(product);
+            await context.SaveChangesAsync();
+
+            return NoContent();
         }
-
-        context.Products.Remove(product);
-        await context.SaveChangesAsync();
-
-        return NoContent();
+        catch (Exception ex)
+        {
+            return StatusCode(500, "Internal server error, please try again later." + ex.Message);
+        }
     }
 }

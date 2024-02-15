@@ -35,16 +35,22 @@ public class CategoriesController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetCategories()
     {
-        var client = _clientFactory.CreateClient("ProductsAPI");
-        var response = await client.GetAsync("Categories/");
-
-        if (response.IsSuccessStatusCode)
+        try
         {
-            var products = await response.Content.ReadAsStringAsync();
-            return Ok(products);
-        }
+            var client = _clientFactory.CreateClient("ProductsAPI");
+            var response = await client.GetAsync("Categories/");
 
-        return StatusCode((int)response.StatusCode, response.Content.ReadAsStringAsync().Result);
+            if (response.IsSuccessStatusCode)
+            {
+                var products = await response.Content.ReadAsStringAsync();
+                return Ok(products);
+            }
+
+            return StatusCode((int)response.StatusCode, response.Content.ReadAsStringAsync().Result);
+        }catch (Exception ex)
+        {
+            return StatusCode(500, "Internal server error, please try again later." + ex.Message);
+        }
     }
 
     /// <summary>
@@ -59,16 +65,22 @@ public class CategoriesController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetCategoryById(int id)
     {
-        var client = _clientFactory.CreateClient("ProductsAPI");
-        var response = await client.GetAsync($"Categories/{id}");
-
-        if (response.IsSuccessStatusCode)
+        try
         {
-            var product = await response.Content.ReadAsStringAsync();
-            return Ok(product);
-        }
+            var client = _clientFactory.CreateClient("ProductsAPI");
+            var response = await client.GetAsync($"Categories/{id}");
 
-        return StatusCode((int)response.StatusCode, response.Content.ReadAsStringAsync().Result);
+            if (response.IsSuccessStatusCode)
+            {
+                var product = await response.Content.ReadAsStringAsync();
+                return Ok(product);
+            }
+
+            return StatusCode((int)response.StatusCode, response.Content.ReadAsStringAsync().Result);
+        }catch (Exception ex)
+        {
+            return StatusCode(500, "Internal server error, please try again later." + ex.Message);
+        }
     }
 
     /// <summary>
@@ -83,14 +95,20 @@ public class CategoriesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> PostCategory([FromBody] CategoryDTO category)
     {
-        var client = _clientFactory.CreateClient("ProductsAPI");
-        var response = await client.PostAsJsonAsync("Categories/", category);
-        if (response.IsSuccessStatusCode)
+        try
         {
-            return Ok();
-        }
+            var client = _clientFactory.CreateClient("ProductsAPI");
+            var response = await client.PostAsJsonAsync("Categories/", category);
+            if (response.IsSuccessStatusCode)
+            {
+                return Ok();
+            }
 
-        return StatusCode((int)response.StatusCode, response.Content.ReadAsStringAsync().Result);
+            return StatusCode((int)response.StatusCode, response.Content.ReadAsStringAsync().Result);
+        }catch (Exception ex)
+        {
+            return StatusCode(500, "Internal server error, please try again later." + ex.Message);
+        }
     }
     
     /// <summary>
@@ -105,14 +123,20 @@ public class CategoriesController : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteCategory(int id)
     {
-        var client = _clientFactory.CreateClient("ProductsAPI");
-        var response = await client.DeleteAsync($"Categories/{id}");
-
-        if (response.IsSuccessStatusCode)
+        try
         {
-            return Ok();
-        }
+            var client = _clientFactory.CreateClient("ProductsAPI");
+            var response = await client.DeleteAsync($"Categories/{id}");
 
-        return StatusCode((int)response.StatusCode, response.Content.ReadAsStringAsync().Result);
+            if (response.IsSuccessStatusCode)
+            {
+                return Ok();
+            }
+
+            return StatusCode((int)response.StatusCode, response.Content.ReadAsStringAsync().Result);
+        }catch (Exception ex)
+        {
+            return StatusCode(500, "Internal server error, please try again later." + ex.Message);
+        }
     }
 }

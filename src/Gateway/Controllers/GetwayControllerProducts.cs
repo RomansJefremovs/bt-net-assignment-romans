@@ -35,16 +35,22 @@ namespace Gateway.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProducts()
         {
-            var client = _clientFactory.CreateClient("ProductsAPI");
-            var response = await client.GetAsync("Products");
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var products = await response.Content.ReadAsStringAsync();
-                return Ok(products);
-            }
+                var client = _clientFactory.CreateClient("ProductsAPI");
+                var response = await client.GetAsync("Products");
 
-            return StatusCode((int)response.StatusCode, response.Content.ReadAsStringAsync().Result);
+                if (response.IsSuccessStatusCode)
+                {
+                    var products = await response.Content.ReadAsStringAsync();
+                    return Ok(products);
+                }
+
+                return StatusCode((int)response.StatusCode, response.Content.ReadAsStringAsync().Result);
+            }catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error, please try again later." + ex.Message);
+            }
         }
 
         /// <summary>
@@ -59,16 +65,22 @@ namespace Gateway.Controllers
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetProductById(int id)
         {
-            var client = _clientFactory.CreateClient("ProductsAPI");
-            var response = await client.GetAsync($"Products/{id}");
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var product = await response.Content.ReadAsStringAsync();
-                return Ok(product);
-            }
+                var client = _clientFactory.CreateClient("ProductsAPI");
+                var response = await client.GetAsync($"Products/{id}");
 
-            return StatusCode((int)response.StatusCode, response.Content.ReadAsStringAsync().Result);
+                if (response.IsSuccessStatusCode)
+                {
+                    var product = await response.Content.ReadAsStringAsync();
+                    return Ok(product);
+                }
+
+                return StatusCode((int)response.StatusCode, response.Content.ReadAsStringAsync().Result);
+            }catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error, please try again later." + ex.Message);
+            }
         }
 
         /// <summary>
@@ -83,15 +95,21 @@ namespace Gateway.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ProductDTO product)
         {
-            var client = _clientFactory.CreateClient("ProductsAPI");
-            var response = await client.PostAsJsonAsync("Products", product);
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                return Ok();
-            }
+                var client = _clientFactory.CreateClient("ProductsAPI");
+                var response = await client.PostAsJsonAsync("Products", product);
 
-            return StatusCode((int)response.StatusCode, response.Content.ReadAsStringAsync().Result);
+                if (response.IsSuccessStatusCode)
+                {
+                    return Ok();
+                }
+
+                return StatusCode((int)response.StatusCode, response.Content.ReadAsStringAsync().Result);
+            }catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error, please try again later." + ex.Message);
+            }
         }
 
         /// <summary>
@@ -106,15 +124,21 @@ namespace Gateway.Controllers
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var client = _clientFactory.CreateClient("ProductsAPI");
-            var response = await client.DeleteAsync($"Products/{id}");
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                return Ok();
-            }
+                var client = _clientFactory.CreateClient("ProductsAPI");
+                var response = await client.DeleteAsync($"Products/{id}");
 
-            return StatusCode((int)response.StatusCode, response.Content.ReadAsStringAsync().Result);
+                if (response.IsSuccessStatusCode)
+                {
+                    return Ok();
+                }
+
+                return StatusCode((int)response.StatusCode, response.Content.ReadAsStringAsync().Result);
+            }catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error, please try again later." + ex.Message);
+            }
         }
     }
 }
