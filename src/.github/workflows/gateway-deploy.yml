@@ -5,7 +5,7 @@ on:
     branches:
       - master  # Adjust if your default branch is different
     paths:
-      - 'Gateway/**'  # Trigger only when there are changes in the Gateway project
+      - 'Gateway/**'  # Ensure this matches the path to your Gateway project
 
 jobs:
   build-and-deploy:
@@ -14,20 +14,27 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      # Debugging step: List contents of the Gateway directory
+      - name: List contents of the Gateway project directory
+        run: dir
+        working-directory: Gateway  # Adjust if your Gateway project is in a different directory
+
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '8.0'  # Ensure this matches your project's target .NET version
 
+      # Use full path in the dotnet build command
       - name: Build with dotnet
-        run: dotnet build src/Gateway/Gateway.csproj --configuration Release  # Specify the path to the Gateway project's .csproj file
+        run: dotnet build Gateway/Gateway.csproj --configuration Release  # Adjust the path if necessary
 
+      # Use full path in the dotnet publish command
       - name: Dotnet publish
-        run: dotnet publish src/Gateway/Gateway.csproj -c Release -o ./publish  # Publish the Gateway project
+        run: dotnet publish Gateway/Gateway.csproj -c Release -o ./publish  # Adjust the path if necessary
 
       - name: Deploy to Azure App Service
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ secrets.AZURE_APP_NAME_GATEWAY }}  # Use the Azure App Service name for your Gateway app
-          publish-profile: ${{ secrets.AZURE_CREDENTIALS_GATEWAY }}  # Use the publish profile or service principal for Azure deployment
+          app-name: ${{ secrets.AZURE_APP_NAME_GATEWAY }}
+          publish-profile: ${{ secrets.AZURE_CREDENTIALS_GATEWAY }}
           package: ./publish
