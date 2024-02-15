@@ -5,7 +5,7 @@ on:
     branches:
       - master  # Adjust if your default branch is different
     paths:
-      - 'Gateway/**'  # Ensure this matches the path to your Gateway project
+      - 'src/Gateway/**'  # Ensure this matches the path to your Gateway project
 
 jobs:
   build-and-deploy:
