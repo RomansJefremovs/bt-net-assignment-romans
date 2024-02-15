@@ -1,28 +1,36 @@
+name: Build and Deploy to Azure Web App
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'src/Gateway/**'
+
 jobs:
   build-and-deploy:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-      # List the contents of the repository root
-      - name: List contents of the repository root
-        run: dir
-
-      # List the contents of the Gateway directory
-      - name: List contents of the Gateway directory
-        run: dir Gateway
-
-      - name: Set up .NET Core
+      - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '8.0'
+          dotnet-version: '8.x' # Specify the .NET version
 
-      - name: Build with dotnet
-        run: dotnet build Gateway/Gateway.csproj --configuration Release
+      - name: Build Project
+        run: dotnet build src/Gateway/Gateway.csproj --configuration Release
 
-      - name: Dotnet publish
-        run: dotnet publish Gateway/Gateway.csproj -c Release -o ./publish
+      - name: Publish Project
+        run: dotnet publish src/Gateway/Gateway.csproj -c Release -o ./publish
 
-      # Continue with the rest of your steps...
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: your-azure-webapp-name # Set your Azure Web App name
+          slot-name: 'Production' # Optional: If you're using deployment slots, specify the slot name here
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }} # Ensure you have this secret set in your GitHub repository
+          package: ./publish
 
