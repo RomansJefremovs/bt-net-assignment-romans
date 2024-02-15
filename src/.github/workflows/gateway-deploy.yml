@@ -3,9 +3,9 @@ name: Deploy Gateway to Azure App Service
 on:
   push:
     branches:
-      - master
+      - master  # Adjust if your default branch is different
     paths:
-      - 'Gateway/**'
+      - 'Gateway/**'  # Trigger only when there are changes in the Gateway project
 
 jobs:
   build-and-deploy:
@@ -17,17 +17,19 @@ jobs:
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '8.0'  # Specify your .NET version
+          dotnet-version: '8.0'  # Ensure this matches your project's target .NET version
 
       - name: Build with dotnet
-        run: dotnet build  Gateway/Gateway.csproj--configuration Release
+        run: dotnet build --configuration Release
+        working-directory: Gateway  # Set the working directory to the Gateway project directory
 
       - name: Dotnet publish
-        run: dotnet publish Gateway/Gateway.csproj-c Release -o ./publish
+        run: dotnet publish -c Release -o ./publish
+        working-directory: Gateway  # Ensure dotnet publish runs in the Gateway project directory
 
       - name: Deploy to Azure App Service
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ secrets.AZURE_APP_NAME_GATEWAY }}
-          publish-profile: ${{ secrets.AZURE_CREDENTIALS_GATEWAY }}
-          package: ./publish
+          app-name: ${{ secrets.AZURE_APP_NAME_GATEWAY }}  # Use the Azure App Service name for your Gateway app
+          publish-profile: ${{ secrets.AZURE_CREDENTIALS_GATEWAY }}  # Use the publish profile or service principal for Azure deployment
+          package: ./Gateway/publish  # Adjust the package path according to the working directory
