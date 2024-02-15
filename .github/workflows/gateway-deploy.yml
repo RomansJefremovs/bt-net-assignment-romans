@@ -1,28 +1,19 @@
+name: List Gateway Directory Contents
+
+on: [push]  # Or any other event you want to trigger the workflow
+
 jobs:
-  build-and-deploy:
+  list-contents:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      # List the contents of the repository root
-      - name: List contents of the repository root
+      - name: List contents of the src directory
         run: dir
+        working-directory: src
 
-      # List the contents of the Gateway directory
       - name: List contents of the Gateway directory
-        run: dir Gateway
-
-      - name: Set up .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '8.0'
-
-      - name: Build with dotnet
-        run: dotnet build Gateway/Gateway.csproj --configuration Release
-
-      - name: Dotnet publish
-        run: dotnet publish Gateway/Gateway.csproj -c Release -o ./publish
-
-      # Continue with the rest of your steps...
-
+        run: dir
+        working-directory: src/Gateway
