@@ -92,7 +92,6 @@ public class CategoriesController : ControllerBase
 
         return StatusCode((int)response.StatusCode, response.Content.ReadAsStringAsync().Result);
     }
-
     
     /// <summary>
     /// Deletes a category by its identifier in the Products API Category Table.
